@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <!-- Layered Card Design -->
+        <div class="position-relative">
+            <!-- Background Decoration (Glass) -->
+            <div class="position-absolute translate-middle-x top-0 start-50 w-100 h-100" 
+                 style="background: var(--brand-primary); opacity: 0.05; filter: blur(40px); border-radius: var(--radius-xl); z-index: -1;">
+            </div>
+            
+            <div class="modern-card p-4 p-md-5 fade-up" style="background: rgba(255,255,255,0.9); border: 1px solid var(--glass-border);">
+                <div class="text-center mb-5">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" 
+                         style="width: 72px; height: 72px; font-size: 1.8rem; background: var(--brand-primary) !important; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);">
+                        <i class="fa-solid {% if 'regist' in request.path %}fa-fingerprint{% else %}fa-lock-open{% endif %}"></i>
+                    </div>
+                    <h2 class="fw-800 text-dark mb-2">{% if page_title %}{{ page_title }}{% else %}Xush kelibsiz{% endif %}</h2>
+                    <p class="text-muted small px-lg-4">Ma'lumotlarni kiriting va platforma imkoniyatlaridan to'liq foydalaning</p>
+                </div>
+                
+                <form action="{% block form_url %}{% endblock %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-wrapper">
+                        {{ form|crispy }}
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 py-3 mt-4 mb-4 rounded-3 d-flex align-items-center justify-content-center gap-2" type="submit">
+                        <span class="fw-700">{% if button %}{{ button }}{% else %}Tasdiqlash{% endif %}</span>
+                        <i class="fa-solid fa-arrow-right-long small opacity-50"></i>
+                    </button>
+                    
+                    <div class="pt-2 border-top">
+                        {% if 'login' in request.path %}
+                        <p class="text-center text-muted small mb-0">
+                            Hisobingiz yo'qmi? <a href="{% url 'account:regist' %}" class="text-primary fw-700 text-decoration-none">Tezda ochish</a>
+                        </p>
+                        {% elif 'regist' in request.path %}
+                        <p class="text-center text-muted small mb-0">
+                            Profilingiz bormi? <a href="{% url 'account:login' %}" class="text-primary fw-700 text-decoration-none">Kirish</a>
+                        </p>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-wrapper .mb-3 label { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; margin-left: 4px; }
+    .form-wrapper .form-control { 
+        border-radius: 12px; 
+        padding: 14px 18px; 
+        border: 1.5px solid var(--border-light); 
+        background: #fcfdfe;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        font-size: 0.95rem;
+    }
+    .form-wrapper .form-control:focus {
+        border-color: var(--brand-primary);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px var(--brand-primary-light);
+        outline: none;
+    }
+</style>
+{% endblock %}

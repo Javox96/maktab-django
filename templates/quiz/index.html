@@ -1,0 +1,123 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row align-items-center mb-5 fade-up">
+    <div class="col-md-6">
+        <h2 class="fw-800 text-dark mb-1">Admin Dashboard</h2>
+        <p class="text-muted">Test natijalari va platforma statistikasi</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <div class="dropdown d-inline-block">
+            <button class="btn btn-glass dropdown-toggle fw-bold py-2 px-4 rounded-3" type="button" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-filter me-2 text-primary"></i> Sinflar bo'yicha filter
+            </button>
+            <ul class="dropdown-menu border-0 shadow-lg mt-2 p-2 rounded-4" style="min-width: 200px;">
+                <li><a class="dropdown-item py-2 px-3 rounded-3" href="{% url 'quiz:index' %}">Barcha sinflar</a></li>
+                <hr class="dropdown-divider">
+                {% for row in sinflar %}
+                <li>
+                    <a class="dropdown-item py-2 px-3 rounded-3" href="{% url 'quiz:natija' row.id %}">
+                        <i class="fa-solid fa-graduation-cap me-2 text-muted"></i> {{ row.nom }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Quick Actions -->
+<div class="row g-4 mb-5 fade-up" style="animation-delay: 0.1s;">
+    <div class="col-md-3">
+        <a href="{% url 'quiz:savol_add' %}" class="modern-card p-4 text-center d-block text-decoration-none group">
+            <div class="bg-subtle-success rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 transition-all group-hover:scale-110" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                <i class="fa-solid fa-plus-circle"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Test qo'shish</h6>
+            <p class="text-muted small mb-0">Yangi savollar</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'quiz:bitik_add' %}" class="modern-card p-4 text-center d-block text-decoration-none group">
+            <div class="bg-subtle-info rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 transition-all group-hover:scale-110" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                <i class="fa-solid fa-quote-left"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Bitik qo'shish</h6>
+            <p class="text-muted small mb-0">Hikmatlar</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'quiz:savollar' %}" class="modern-card p-4 text-center d-block text-decoration-none group">
+            <div class="bg-subtle-warning rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 transition-all group-hover:scale-110" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">Savollar ro'yxati</h6>
+            <p class="text-muted small mb-0">Barchasini ko'rish</p>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <div class="modern-card p-4 text-center h-100">
+            <div class="bg-subtle-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h6 class="fw-bold text-dark mb-1">{{ natijalar|length }}</h6>
+            <p class="text-muted small mb-0">Jami natijalar</p>
+        </div>
+    </div>
+</div>
+
+<h4 class="fw-800 text-dark mb-4 fade-up" style="animation-delay: 0.2s;">Oxirgi natijalar</h4>
+<div class="row g-4 fade-up" style="animation-delay: 0.3s;">
+    {% for nat in natijalar %}
+    <div class="col-md-6 col-lg-4">
+        <div class="modern-card p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h5 class="fw-bold text-dark mb-1">{{ nat.user.username }}</h5>
+                    <span class="badge bg-subtle-primary rounded-pill px-3">{{ nat.sinf.nom }}</span>
+                </div>
+                <div class="text-end">
+                    <div class="fw-800 fs-4 color-{% if nat.foiz >= 80 %}success{% elif nat.foiz >= 50 %}warning{% else %}danger{% endif %}">
+                        {{ nat.foiz }}%
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-subtle-surface rounded-4 p-3 mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted small fw-600">To'g'ri:</span>
+                    <span class="text-success fw-bold">{{ nat.tjavob }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted small fw-600">Noto'g'ri:</span>
+                    <span class="text-danger fw-bold">{{ nat.njavob }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted small fw-600">Jami:</span>
+                    <span class="fw-bold text-main">{{ nat.jamisavol }}</span>
+                </div>
+            </div>
+            
+            <div class="text-muted small d-flex align-items-center">
+                <i class="fa-regular fa-calendar me-2"></i>
+                {{ nat.date|date:"d.m.Y — H:i" }}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="bg-subtle-surface rounded-4 p-5">
+            <i class="fa-solid fa-inbox fs-1 text-muted mb-3 opacity-25"></i>
+            <p class="text-muted mb-0">Hozircha natijalar mavjud emas.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .color-success { color: #22c55e !important; }
+    .color-warning { color: #f59e0b !important; }
+    .color-danger { color: #ef4444 !important; }
+</style>
+{% endblock %}

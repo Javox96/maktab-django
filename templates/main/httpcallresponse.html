@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="modern-card p-5 text-center fade-up">
+            <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            
+            <h3 class="fw-800 text-dark mb-3">Bugun test ishlangan!</h3>
+            <p class="text-muted mb-4 px-3" style="font-size: 1.1rem; line-height: 1.6;">
+                Siz bugun <span class="text-primary fw-800">{{ sinf.nom }}</span> bo'yicha testni allaqachon yakunlagansiz. 
+                Platforma qoidalariga ko'ra, har bir sinf testini kuniga bir marta topshirish mumkin.
+            </p>
+            
+            <div class="alert alert-info border-0 rounded-4 py-3 mb-4" style="background: var(--brand-primary-light);">
+                <i class="fa-solid fa-clock me-2"></i> Ertaga yana qayta urinib ko'rishingiz mumkin.
+            </div>
+            
+            <div class="d-flex flex-column gap-2">
+                <a href="{% url 'main:result' %}" class="btn btn-primary rounded-pill py-3 fw-800">
+                    NATIJALARIMNI KO'RISH
+                </a>
+                <a href="{% url 'main:index' %}" class="btn btn-link text-decoration-none text-muted fw-700 mt-2">
+                    Bosh sahifaga qaytish
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

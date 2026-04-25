@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-8">
+        <div class="modern-card p-5 fade-up">
+            <div class="text-center mb-5">
+                <span class="section-label mx-auto">Biz haqimizda</span>
+                <h2 class="fw-800 text-dark display-5">Tafakkur Platformasi</h2>
+            </div>
+            
+            <div class="row align-items-center g-5 mb-5">
+                <div class="col-md-6">
+                    <p class="text-muted mb-4" style="font-size: 1.1rem; line-height: 1.8;">
+                        Tafakkur — bu maktab o'quvchilari uchun maxsus ishlab chiqilgan innovatsion ta'lim platformasi. 
+                        Bizning maqsadimiz o'quvchilarga o'z bilimlarini mustahkamlash va test sinovlari orqali o'z darajalarini aniqlash imkoniyatini berishdir.
+                    </p>
+                    <p class="text-muted" style="font-size: 1.1rem; line-height: 1.8;">
+                        Har bir sinf uchun alohida tayyorlangan savollar va real vaqt rejimidagi natijalar o'quvchini yanada ko'proq ilm olishga undaydi.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-primary-light p-4 rounded-4 position-relative">
+                        <div class="bg-white p-3 rounded-3 shadow-sm mb-3 d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-success fs-4"></i>
+                            <span class="fw-700 text-dark">Sifatli savollar bazasi</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-3 shadow-sm mb-3 d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-success fs-4"></i>
+                            <span class="fw-700 text-dark">Tezkor natijalar tahlili</span>
+                        </div>
+                        <div class="bg-white p-3 rounded-3 shadow-sm d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-success fs-4"></i>
+                            <span class="fw-700 text-dark">Motivatsion iqtiboslar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="opacity-10 my-5">
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                        📝
+                    </div>
+                    <h5 class="fw-800 text-dark">Test ishlash</h5>
+                    <p class="text-muted small">Har bir sinf uchun moslashtirilgan savollar to'plami.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                        📊
+                    </div>
+                    <h5 class="fw-800 text-dark">Natijalar</h5>
+                    <p class="text-muted small">O'z bilim darajangizni foizlarda va tahliliy ko'ring.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; font-size: 2rem;">
+                        🏆
+                    </div>
+                    <h5 class="fw-800 text-dark">Rivojlanish</h5>
+                    <p class="text-muted small">Kunlik testlar orqali o'z ko'rsatkichlaringizni yaxshilang.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'main:index' %}" class="btn btn-primary rounded-pill px-5 py-3 fw-800">
+                    HOZIROQ BOSHLASH <i class="fa-solid fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

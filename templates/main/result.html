@@ -1,0 +1,130 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+.history-container { max-width: 900px; margin: 0 auto; }
+
+.timeline-item {
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 40px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 0;
+    width: 2px;
+    height: calc(100% + 40px);
+    background: var(--border-light);
+}
+
+.timeline-item:last-child::before { display: none; }
+
+.timeline-dot {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 6px solid var(--brand-primary);
+    z-index: 2;
+    box-shadow: 0 0 0 5px var(--brand-primary-light);
+}
+
+.result-glass-card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+.result-glass-card:hover {
+    transform: translateX(10px);
+    border-color: var(--brand-primary);
+    box-shadow: var(--sh-lg);
+}
+
+.score-badge {
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 10px 20px;
+    border-radius: 12px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.score-badge.high { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.score-badge.mid { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.score-badge.low { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.date-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+    display: block;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <div class="d-flex justify-content-between align-items-end mb-5 fade-up">
+        <div>
+            <h1 class="fw-800 text-main mb-1">Natijalar tarixi</h1>
+            <p class="text-muted fw-500 mb-0">Barcha topshirilgan testlar sarhisobi</p>
+        </div>
+        <div class="text-end d-none d-md-block">
+            <a href="{% url 'main:index' %}" class="btn btn-primary rounded-pill px-4 fw-800 small">
+                BOSH SAHIFA
+            </a>
+        </div>
+    </div>
+
+    {% if natijalar %}
+    <div class="timeline-container fade-up" style="animation-delay: 0.1s;">
+        {% for nat in natijalar %}
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <span class="date-label">{{ nat.date|date:"d F, Y — H:i" }}</span>
+            
+            <div class="result-glass-card d-flex flex-wrap align-items-center gap-4">
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="badge bg-primary text-white px-3 py-1 rounded-pill small" style="background: var(--brand-primary) !important;">{{ nat.sinf.nom }}</span>
+                        <h4 class="fw-800 text-main mb-0">{{ nat.sinf.nom }} Nazorat Testi</h4>
+                    </div>
+                    <div class="d-flex gap-4">
+                        <div class="small fw-600 text-muted"><i class="fa-solid fa-check text-success me-1"></i> {{ nat.tjavob }} to'g'ri</div>
+                        <div class="small fw-600 text-muted"><i class="fa-solid fa-xmark text-danger me-1"></i> {{ nat.njavob }} noto'g'ri</div>
+                        <div class="small fw-600 text-muted"><i class="fa-solid fa-layer-group text-primary me-1"></i> {{ nat.jamisavol }} savol</div>
+                    </div>
+                </div>
+                
+                <div class="ms-lg-auto">
+                    <div class="score-badge {% if nat.foiz >= 80 %}high{% elif nat.foiz >= 50 %}mid{% else %}low{% endif %}">
+                        {{ nat.foiz }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="modern-card p-5 text-center fade-up">
+        <i class="fa-solid fa-hourglass-empty display-1 text-primary opacity-25 mb-4"></i>
+        <h2 class="fw-800 text-main">Hozircha tarix bo'sh</h2>
+        <p class="text-muted mb-4">Siz hali birorta ham test topshirmagansiz.</p>
+        <a href="{% url 'main:index' %}" class="btn btn-primary rounded-pill px-5">Testlarni boshlash</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

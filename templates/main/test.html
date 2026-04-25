@@ -1,0 +1,288 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+.test-interface { max-width: 900px; margin: 0 auto; padding-bottom: 200px; }
+
+/* Persistent Header Bar */
+.status-bar {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 90px;
+    z-index: 1000;
+    box-shadow: var(--sh-lg);
+    margin-bottom: 40px;
+}
+
+.timer-pill {
+    background: #4f46e5;
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+}
+
+.timer-pill.danger {
+    background: #ef4444;
+    animation: pulse 1s infinite;
+}
+
+/* Question Cards */
+.question-card {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: var(--sh-lg);
+    transition: all 0.3s ease;
+}
+
+.question-number {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--brand-accent);
+    background: rgba(34, 211, 238, 0.1);
+    padding: 4px 14px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+
+.question-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.5;
+    margin-bottom: 32px;
+}
+
+.option-group { display: flex; flex-direction: column; gap: 12px; }
+
+.option-label {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    border: 1.5px solid var(--border-light);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.option-label:hover {
+    border-color: var(--brand-primary);
+    background: rgba(99, 102, 241, 0.05);
+    transform: translateX(4px);
+}
+
+.option-label input { display: none; }
+
+.option-label:has(input:checked) {
+    border-color: var(--brand-primary);
+    border-width: 2px;
+    background: var(--brand-primary-light);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+}
+
+.option-marker {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--surface-light);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.option-label:has(input:checked) .option-marker {
+    background: var(--brand-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Fixed Bottom Action Bar */
+.action-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 900px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: var(--text-main);
+    border-radius: 28px;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--sh-premium);
+    z-index: 1001;
+    border: 1px solid var(--glass-border);
+}
+
+.test-progress { flex-grow: 1; margin-right: 40px; }
+.progress-meta { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.progress-rail { height: 8px; background: var(--surface-light); border-radius: 10px; width: 100%; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--brand-primary); width: 0%; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+#submitBtn {
+    background: var(--brand-primary);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    font-weight: 800;
+    border-radius: 18px;
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+    transition: all 0.3s ease;
+}
+
+#submitBtn:hover {
+    background: var(--brand-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 25px rgba(79, 70, 229, 0.3);
+}
+
+.option-label:has(input:checked) .option-marker {
+    background: var(--brand-primary) !important;
+    color: #ffffff !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="test-interface fade-up">
+    {% if savol %}
+    <div class="status-bar">
+        <div>
+            <span class="fw-800 text-main" style="font-size: 1.2rem;">{{ sinf.nom }}</span>
+            <span class="text-muted small d-block fw-600">Umumiy nazorat testi</span>
+        </div>
+        <div class="timer-pill" id="timerBox">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span id="timer">40:00</span>
+        </div>
+    </div>
+
+    <form id="testForm" action="{% url 'main:test' pk %}" method="post">
+        {% csrf_token %}
+        {% for q in savol %}
+        <div class="question-card" id="q-{{ q.id }}">
+            <span class="question-number">Savol {{ forloop.counter }}</span>
+            {% if q.image %}
+                <img src="{{ q.image.url }}" class="img-fluid rounded-4 mb-4 border w-100" style="max-height: 450px; object-fit: contain; border-color: var(--border-light) !important;">
+            {% endif %}
+            <h3 class="question-text">{{ q.savol }}</h3>
+            
+            <div class="option-group">
+                <label class="option-label">
+                    <input type="radio" name="{{ q.id }}" value="1">
+                    <span class="option-marker">A</span>
+                    <span class="fw-600 text-main">{{ q.variant1 }}</span>
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="{{ q.id }}" value="2">
+                    <span class="option-marker">B</span>
+                    <span class="fw-600 text-main">{{ q.variant2 }}</span>
+                </label>
+                <label class="option-label">
+                    <input type="radio" name="{{ q.id }}" value="3">
+                    <span class="option-marker">C</span>
+                    <span class="fw-600 text-main">{{ q.variant3 }}</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="action-bar">
+            <div class="test-progress">
+                <div class="progress-meta" id="progressText">0 / {{ savol|length }} JAVOB BERILDI</div>
+                <div class="progress-rail">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <button class="btn btn-primary rounded-pill px-5 fw-800" type="submit" id="submitBtn">
+                YAKUNLASH <i class="fa-solid fa-paper-plane ms-2"></i>
+            </button>
+        </div>
+    </form>
+
+    <script>
+    // Timer Logic
+    let time = 40 * 60;
+    const timerEl = document.getElementById('timer');
+    const timerBox = document.getElementById('timerBox');
+    const interval = setInterval(() => {
+        const m = Math.floor(time / 60);
+        const s = time % 60;
+        timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+        if (time <= 300) timerBox.classList.add('danger');
+        if (time <= 0) { clearInterval(interval); document.getElementById('testForm').submit(); }
+        time--;
+    }, 1000);
+
+    // Progress Logic
+    const radios = document.querySelectorAll('input[type=radio]');
+    const total = {{ savol|length }};
+    const answered = new Set();
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+
+    radios.forEach(r => r.addEventListener('change', () => {
+        answered.add(r.name);
+        const count = answered.size;
+        const percent = (count / total) * 100;
+        progressText.textContent = count + ' / ' + total + ' JAVOB BERILDI';
+        progressFill.style.width = percent + '%';
+        
+        // Highlight active card
+        const card = r.closest('.question-card');
+        card.style.borderColor = 'var(--brand-primary)';
+        card.style.background = 'rgba(99, 102, 241, 0.05)';
+    }));
+
+    // Alert on incomplete
+    document.getElementById('testForm').addEventListener('submit', (e) => {
+        if (answered.size < total) {
+            // Confirm returns true if user clicks OK (wants to submit anyway)
+            // returns false if user clicks Cancel (does not want to submit)
+            if (!confirm('Hali hamma savollarga javob bermadingiz. Testni baribir yakunlamoqchimisiz?')) {
+                e.preventDefault();
+            }
+        }
+    });
+    </script>
+    {% else %}
+    <div class="modern-card p-5 text-center fade-up">
+        <i class="fa-solid fa-folder-open display-1 text-primary opacity-25 mb-4"></i>
+        <h2 class="fw-800 text-main">Testlar mavjud emas</h2>
+        <p class="text-muted mb-4">Ushbu bo'lim uchun hali savollar kiritilmagan. Iltimos, keyinroq urinib ko'ring.</p>
+        <a href="{% url 'main:index' %}" class="btn btn-primary rounded-pill px-5">Bosh sahifaga qaytish</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'layouts/form.html' %}
+
+{% block form_url %}{% url 'quiz:bitik_add' %}{% endblock %}
+
+{% block content %}
+{% with page_title="Yangi bitik qo'shish" button="Saqlash" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}

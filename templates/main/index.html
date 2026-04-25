@@ -1,0 +1,224 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+.hero-stack {
+    padding: 60px 0 100px;
+    position: relative;
+}
+
+/* Modern Carousel Styling */
+.carousel-container {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--sh-premium);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    background: var(--surface);
+}
+
+.carousel-item {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.4) 100%);
+    display: flex;
+    align-items: center;
+    padding: 60px;
+}
+
+.carousel-caption-custom {
+    max-width: 550px;
+    color: white;
+    z-index: 10;
+}
+
+.carousel-indicators [data-bs-target] {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 6px;
+    background-color: var(--brand-primary);
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background: var(--glass-bg);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 20px;
+    border: 1px solid var(--glass-border);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.carousel-container:hover .carousel-control-prev,
+.carousel-container:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+    font-weight: 800;
+    color: white;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.section-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--brand-accent);
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 4px 16px;
+    background: rgba(34, 211, 238, 0.1);
+    border-radius: 50px;
+}
+
+.quote-tile {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-tile:hover {
+    transform: translateY(-10px);
+    border-color: var(--brand-primary);
+    box-shadow: var(--sh-premium);
+    background: var(--surface-light);
+}
+
+.quote-icon {
+    font-size: 4rem;
+    color: var(--brand-primary);
+    opacity: 0.1;
+    position: absolute;
+    top: -10px;
+    right: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-stack fade-up">
+    <!-- Carousel Section -->
+    <div class="carousel-container mb-5">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for item in carousels %}
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+                {% empty %}
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+                {% endfor %}
+            </div>
+            <div class="carousel-inner">
+                {% for item in carousels %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}" style="background-image: url('{{ item.image.url }}');">
+                    <div class="carousel-overlay">
+                        <div class="carousel-caption-custom">
+                            {% if item.label %}<span class="section-label">{{ item.label }}</span>{% endif %}
+                            <h1 class="hero-title">{{ item.title }}</h1>
+                            {% if item.subtitle %}<p class="hero-subtitle">{{ item.subtitle }}</p>{% endif %}
+                            {% if item.button_text %}
+                            <div class="d-flex gap-3">
+                                <a href="{{ item.button_url|default:'#' }}" class="btn btn-primary btn-lg rounded-pill px-5">{{ item.button_text }}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Default Slide -->
+                <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070');">
+                    <div class="carousel-overlay">
+                        <div class="carousel-caption-custom">
+                            <span class="section-label">Kelajak ta'limi</span>
+                            <h1 class="hero-title">Bilimingizni eng yuqori darajada sinab ko'ring</h1>
+                            <p class="hero-subtitle">Zamonaviy va professional test platformasi. O'z natijalaringizni real vaqtda kuzating.</p>
+                            <div class="d-flex gap-3">
+                                <a href="#test-selection" class="btn btn-primary btn-lg rounded-pill px-5">Boshlash</a>
+                                <a href="{% url 'main:about' %}" class="btn btn-outline-light btn-lg rounded-pill px-5">Biz haqimizda</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Test Selection Section (Anchor) -->
+    <div id="test-selection" class="pt-5 text-center mb-5">
+        <span class="section-label">Testlar</span>
+        <h2 class="fw-800 display-6">Sinfingizni tanlang</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+            {% for s in sinflar %}
+            <a href="{% url 'main:test' s.id %}" class="modern-card p-4 text-decoration-none transition-all" style="min-width: 180px;">
+                <div class="stat-icon bg-primary-light text-primary mx-auto mb-3" style="width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-graduation-cap fs-4"></i>
+                </div>
+                <h5 class="fw-800 text-main mb-1">{{ s.nom }}</h5>
+                <span class="text-muted small fw-600">Testni boshlash</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% if posts %}
+<div class="container py-5">
+    <div class="text-center mb-5 fade-up">
+        <span class="section-label">Donolar hikmati</span>
+        <h2 class="fw-800 display-6">Kunlik hikmatlar</h2>
+    </div>
+    
+    <div class="row g-4 justify-content-center">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4 fade-up" style="animation-delay: {{ forloop.counter }}00ms;"></div>
+            <div class="quote-tile">
+                <i class="fa-solid fa-quote-right quote-icon"></i>
+                <p class="text-main fw-600 mb-4 lh-base" style="font-size: 1.15rem; font-style: italic; position: relative; z-index: 2;">"{{ post.matn }}"</p>
+                <div class="mt-auto d-flex align-items-center gap-3">
+                    <div class="bg-primary rounded-pill" style="width: 30px; height: 3px;"></div>
+                    <span class="fw-800 text-accent small text-uppercase" style="letter-spacing: 2px; color: var(--brand-accent);">{{ post.muallif }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
